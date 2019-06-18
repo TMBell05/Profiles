@@ -212,7 +212,7 @@ class Raw_Profile():
                 for key, value in sensor_names["IMET"].items():
                     try:
                         if 'Time' in key:
-                            time = dt.fromtimestamp(elem["meta"]["timestamp"])
+                            time = dt.utcfromtimestamp(elem["meta"]["timestamp"])
                             if time.year < 2000:
                                 raise KeyError("Time formatted incorrectly")
                             else:
@@ -250,7 +250,7 @@ class Raw_Profile():
                 for key, value in sensor_names["RHUM"].items():
                     try:
                         if 'Time' in key:
-                            time = dt.fromtimestamp(elem["meta"]["timestamp"])
+                            time = dt.utcfromtimestamp(elem["meta"]["timestamp"])
                             if time.year < 2000:
                                 raise KeyError("Time formatted incorrectly")
                             else:
@@ -291,7 +291,7 @@ class Raw_Profile():
                 for key, value in sensor_names["POS"].items():
                     try:
                         if 'Time' in key:
-                            time = dt.fromtimestamp(elem["meta"]["timestamp"])
+                            time = dt.utcfromtimestamp(elem["meta"]["timestamp"])
                             if time.year < 2000:
                                 raise KeyError("Time formatted incorrectly")
                             else:
@@ -327,7 +327,7 @@ class Raw_Profile():
                 for key, value in sensor_names[self.baro].items():
                     try:
                         if 'Time' in key:
-                            time = dt.fromtimestamp(elem["meta"]["timestamp"])
+                            time = dt.utcfromtimestamp(elem["meta"]["timestamp"])
                             if time.year < 2000:
                                 raise KeyError("Time formatted incorrectly")
                             else:
@@ -367,7 +367,7 @@ class Raw_Profile():
                 for key, value in sensor_names["NKF1"].items():
                     try:
                         if 'Time' in key:
-                            time = dt.fromtimestamp(elem["meta"]["timestamp"])
+                            time = dt.utcfromtimestamp(elem["meta"]["timestamp"])
                             if time.year < 2000:
                                 raise KeyError("Time formatted incorrectly")
                             else:
