@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="oucass-profiles",
-    version="1.1.0",
+    name="profilesBackwards",
+    version="1.0.1",
     author="Jessica Blunt, Tyler Bell, Brian Greene, Gus Azevedo, Ariel Jacobs",
     author_email="cass@ou.edu",
     description="Tools to process atmospheric data collected by UAS along either vertical or horizontal lines",
