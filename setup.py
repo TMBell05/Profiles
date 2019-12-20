@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="profiles",
+    name="profilesBackwards",
     version="1.0.1",
     author="Jessica Blunt, Tyler Bell, Brian Greene, Gus Azevedo, Ariel Jacobs",
     author_email="jessica.m.blunt-1@ou.edu",

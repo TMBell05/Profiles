@@ -11,12 +11,11 @@ import json
 import netCDF4
 import numpy as np
 from datetime import datetime as dt
-from metpy.units import units  # this is a pint UnitRegistry
-import profiles.mavlogdump_Profiles as mavlogdump_Profiles
-from profiles import utils
+from metpy.units import units
+import profiles_backward.mavlogdump_Profiles as mavlogdump_Profiles
+from profiles_backward import utils
 import pandas as pd
 import os
-from profiles.process_checklist import Meta
 
 units.define('percent = 0.01*count = %')
 units.define('gPerKg = 0.001*count = g/Kg')
@@ -38,8 +37,7 @@ class Raw_Profile():
     :var dict serial_numbers: Contains serial number or 0 for each sensor
     """
 
-    def __init__(self, file_path, dev=False, scoop_id=None, nc_level='low',
-                 meta_header_path=None, meta_flight_path=None):
+    def __init__(self, file_path, dev=False, scoop_id=None, nc_level='low'):
         """ Creates a Raw_Profile object and reads in data in the appropiate
         format.
 
@@ -54,9 +52,6 @@ class Raw_Profile():
            'none'.
         """
 
-        self.meta = None
-        if meta_header_path is not None or meta_flight_path is not None:
-            self.meta = Meta(meta_header_path, meta_flight_path)
         self.temp = None
         self.rh = None
         self.pos = None
@@ -80,9 +75,6 @@ class Raw_Profile():
 
         # Populate serial_numbers
         self.serial_numbers = {}
-
-        if self.meta is not None:
-            scoop_id = self.meta.get("scoop_id")
 
         if scoop_id is not None:
             try:
@@ -314,8 +306,8 @@ class Raw_Profile():
                     sensor_numbers = np.add(range(int((len(temp_list)-2) / 2)),
                                             1)
                     for num in sensor_numbers:
-                        sensor_names["IMET"]["T"+str(num)] = 2*num - 2
-                        sensor_names["IMET"]["R"+str(num)] = 2*num - 1
+                        sensor_names["IMET"]["Temp"+str(num)] = 2*num - 2
+                        sensor_names["IMET"]["Humi"+str(num)] = 2*num - 1
                     sensor_names["IMET"]["Time"] = -1
 
                 # Read fields into temp_list, including Time
@@ -344,16 +336,16 @@ class Raw_Profile():
                 if rh_list is None:
                     # Create array of lists with one list per RH
                     # sensor reported in the data file, plus one for times
-                    rh_list = [[] for x in range(sum(('H' in s and
-                                                      'th' not in s)
+                    rh_list = [[] for x in range(sum(('Humi' in s and
+                                                      'Temp' not in s)
                                for s in elem["data"].keys()) * 2 + 1)]
 
                     sensor_names["RHUM"] = {}
                     # Determine field names
                     sensor_numbers = np.add(range(int((len(rh_list)-1)/2)), 1)
                     for num in sensor_numbers:
-                        sensor_names["RHUM"]["H"+str(num)] = 2*num - 2
-                        sensor_names["RHUM"]["T"+str(num)] = 2*num - 1
+                        sensor_names["RHUM"]["Humi"+str(num)] = 2*num - 2
+                        sensor_names["RHUM"]["Temp"+str(num)] = 2*num - 1
                     sensor_names["RHUM"]["Time"] = -1
 
                 # Read fields into rh_list, including Time
