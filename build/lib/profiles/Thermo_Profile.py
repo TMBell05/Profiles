@@ -38,7 +38,8 @@ class Thermo_Profile():
 
     def _init2(self, temp_dict, resolution, file_path=None,
                gridded_times=None, gridded_base=None, indices=(None, None),
-               ascent=True, units=None, nc_level='low'):
+               ascent=True, units=None, nc_level='low',
+               coefs_path=os.path.join(utils.package_path, "coefs")):
         """ Creates Thermo_Profile object from raw data at the specified
         resolution.
 
@@ -144,8 +145,8 @@ class Thermo_Profile():
         if use_resistance:
             for i in range(len(temp_raw)):
                 temp_raw[i] = utils.temp_calib(temp_raw[i],
-                                               serial_numbers
-                                               ["imet" + str(i+1)])
+                                               serial_numbers["imet"+str(i+1)],
+                                               coefs_path=coefs_path)
         # End if-else blocks
 
         rh_raw = []

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>utils &#8212; Profiles 1.0.1 documentation</title>
+    <title>utils &#8212; oucass-profiles 1.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -19,7 +19,7 @@
     <div class="header-wrapper" role="banner">
       <div class="header">
         <div class="headertitle"><a
-          href="../index.html">Profiles 1.0.1 documentation</a></div>
+          href="../index.html">oucass-profiles 1.1.0 documentation</a></div>
         <div class="rel" role="navigation" aria-label="related navigation">
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |
@@ -187,7 +187,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">gridded_data</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="temp_calib"><a class="viewcode-back" href="../utils.html#utils.temp_calib">[docs]</a><span class="k">def</span> <span class="nf">temp_calib</span><span class="p">(</span><span class="n">resistance</span><span class="p">,</span> <span class="n">sn</span><span class="p">):</span>
+<div class="viewcode-block" id="temp_calib"><a class="viewcode-back" href="../utils.html#utils.temp_calib">[docs]</a><span class="k">def</span> <span class="nf">temp_calib</span><span class="p">(</span><span class="n">resistance</span><span class="p">,</span> <span class="n">sn</span><span class="p">,</span> <span class="n">coefs_path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Converts resistance to temperature using the coefficients for the \</span>
 <span class="sd">       sensor specified OR generalized coefficients if the serial number (sn)\</span>
 <span class="sd">       is not recognized.</span>
@@ -199,8 +199,7 @@
 <span class="sd">    :return: list of temperatures in K</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">coefs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">package_path</span><span class="p">,</span> <span class="s1">&#39;coefs/MasterCoefList.csv&#39;</span><span class="p">))</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">coefs</span><span class="o">.</span><span class="n">A</span><span class="p">[</span><span class="n">coefs</span><span class="o">.</span><span class="n">SerialNumber</span> <span class="o">==</span> <span class="n">sn</span><span class="p">][</span><span class="n">coefs</span><span class="o">.</span><span class="n">SensorType</span> <span class="o">==</span> <span class="s2">&quot;Imet&quot;</span><span class="p">]</span>
+    <span class="n">coefs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">coefs_path</span><span class="p">,</span> <span class="s1">&#39;MasterCoefList.csv&#39;</span><span class="p">))</span>
     <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">coefs</span><span class="o">.</span><span class="n">A</span><span class="p">[</span><span class="n">coefs</span><span class="o">.</span><span class="n">SerialNumber</span> <span class="o">==</span> <span class="n">sn</span><span class="p">][</span><span class="n">coefs</span><span class="o">.</span><span class="n">SensorType</span> <span class="o">==</span> <span class="s2">&quot;Imet&quot;</span><span class="p">])</span>
     <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">coefs</span><span class="o">.</span><span class="n">B</span><span class="p">[</span><span class="n">coefs</span><span class="o">.</span><span class="n">SerialNumber</span> <span class="o">==</span> <span class="n">sn</span><span class="p">][</span><span class="n">coefs</span><span class="o">.</span><span class="n">SensorType</span> <span class="o">==</span> <span class="s2">&quot;Imet&quot;</span><span class="p">])</span>
     <span class="n">c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">coefs</span><span class="o">.</span><span class="n">C</span><span class="p">[</span><span class="n">coefs</span><span class="o">.</span><span class="n">SerialNumber</span> <span class="o">==</span> <span class="n">sn</span><span class="p">][</span><span class="n">coefs</span><span class="o">.</span><span class="n">SensorType</span> <span class="o">==</span> <span class="s2">&quot;Imet&quot;</span><span class="p">])</span>
@@ -528,13 +527,16 @@
           <h3>Table of Contents</h3>
           <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../Meta.html">Meta</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Profile.html">Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Raw_Profile.html">Raw_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Thermo_Profile.html">Thermo_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Wind_Profile.html">Wind_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plotting.html">plotting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coefs.html">Sensor calibration</a></li>
 </ul>
 
           <div role="search">

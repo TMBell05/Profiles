@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Thermo_Profile &#8212; Profiles 1.0.1 documentation</title>
+    <title>Thermo_Profile &#8212; oucass-profiles 1.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -19,7 +19,7 @@
     <div class="header-wrapper" role="banner">
       <div class="header">
         <div class="headertitle"><a
-          href="../index.html">Profiles 1.0.1 documentation</a></div>
+          href="../index.html">oucass-profiles 1.1.0 documentation</a></div>
         <div class="rel" role="navigation" aria-label="related navigation">
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |
@@ -78,7 +78,8 @@
 
 <div class="viewcode-block" id="Thermo_Profile._init2"><a class="viewcode-back" href="../Thermo_Profile.html#Thermo_Profile.Thermo_Profile._init2">[docs]</a>    <span class="k">def</span> <span class="nf">_init2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp_dict</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">gridded_times</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gridded_base</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-               <span class="n">ascent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nc_level</span><span class="o">=</span><span class="s1">&#39;low&#39;</span><span class="p">):</span>
+               <span class="n">ascent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nc_level</span><span class="o">=</span><span class="s1">&#39;low&#39;</span><span class="p">,</span>
+               <span class="n">coefs_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">package_path</span><span class="p">,</span> <span class="s2">&quot;coefs&quot;</span><span class="p">)):</span>
         <span class="sd">&quot;&quot;&quot; Creates Thermo_Profile object from raw data at the specified</span>
 <span class="sd">        resolution.</span>
 
@@ -184,8 +185,8 @@
         <span class="k">if</span> <span class="n">use_resistance</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_raw</span><span class="p">)):</span>
                 <span class="n">temp_raw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">temp_calib</span><span class="p">(</span><span class="n">temp_raw</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                                               <span class="n">serial_numbers</span>
-                                               <span class="p">[</span><span class="s2">&quot;imet&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+                                               <span class="n">serial_numbers</span><span class="p">[</span><span class="s2">&quot;imet&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)],</span>
+                                               <span class="n">coefs_path</span><span class="o">=</span><span class="n">coefs_path</span><span class="p">)</span>
         <span class="c1"># End if-else blocks</span>
 
         <span class="n">rh_raw</span> <span class="o">=</span> <span class="p">[]</span>
@@ -423,13 +424,16 @@
           <h3>Table of Contents</h3>
           <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../Meta.html">Meta</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Profile.html">Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Raw_Profile.html">Raw_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Thermo_Profile.html">Thermo_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Wind_Profile.html">Wind_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plotting.html">plotting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coefs.html">Sensor calibration</a></li>
 </ul>
 
           <div role="search">

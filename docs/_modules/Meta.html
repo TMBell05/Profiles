@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Meta &#8212; oucass-profiles 1.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">oucass-profiles 1.1.0 documentation</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for Meta</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="Meta"><a class="viewcode-back" href="../Meta.html#Meta.Meta">[docs]</a><span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Processes, stores, and writes metadata files (JSON-LD for public, CSV for private) for a flight</span>
+
+<span class="sd">       :var dict&lt;str: Object&gt; all_fields: Dictionary containing all information to be written to metadata files</span>
+<span class="sd">       :var list&lt;str&gt; private_fields: List of fields to be included in the CSV file</span>
+<span class="sd">       :var list&lt;str&gt; public_fields: List of fields to be included in the JSON file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header_path</span><span class="p">,</span> <span class="n">flight_path</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">private_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;checklist_operator&quot;</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;PIC&quot;</span><span class="p">,</span> <span class="s2">&quot;objective&quot;</span><span class="p">,</span> <span class="s2">&quot;authorization_type&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;platform_id&quot;</span><span class="p">,</span> <span class="s2">&quot;max_planned_alt&quot;</span><span class="p">,</span> <span class="s2">&quot;battery_id&quot;</span><span class="p">,</span> <span class="s2">&quot;scoop_id&quot;</span><span class="p">,</span> <span class="s2">&quot;battery_voltage_initial&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;launch_time_utc&quot;</span><span class="p">,</span> <span class="s2">&quot;max_achieved_alt&quot;</span><span class="p">,</span> <span class="s2">&quot;land_time_utc&quot;</span><span class="p">,</span> <span class="s2">&quot;battery_voltage_final&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;emergency_landing&quot;</span><span class="p">,</span> <span class="s2">&quot;emergency_remarks&quot;</span><span class="p">,</span> <span class="s2">&quot;private_remarks&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">public_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;date_utc&quot;</span><span class="p">,</span> <span class="s2">&quot;region&quot;</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;objective&quot;</span><span class="p">,</span> <span class="s2">&quot;cloud&quot;</span><span class="p">,</span> <span class="s2">&quot;rain&quot;</span><span class="p">,</span> <span class="s2">&quot;wind_from_direction&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;wind_speed&quot;</span><span class="p">,</span> <span class="s2">&quot;wind_speed_of_gust&quot;</span><span class="p">,</span> <span class="s2">&quot;surface_altitude&quot;</span><span class="p">,</span> <span class="s2">&quot;launch_time_utc&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;max_achieved_alt&quot;</span><span class="p">,</span> <span class="s2">&quot;land_time_utc&quot;</span><span class="p">,</span> <span class="s2">&quot;remarks&quot;</span><span class="p">,</span> <span class="s2">&quot;variables&quot;</span><span class="p">,</span> <span class="s2">&quot;platform_id&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;platform_name&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;.csv&quot;</span> <span class="ow">in</span> <span class="n">header_path</span> <span class="ow">and</span> <span class="ow">not</span> <span class="s2">&quot;.csv&quot;</span> <span class="ow">in</span> <span class="n">flight_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">combine_files</span><span class="p">(</span><span class="n">header_path</span><span class="p">,</span> <span class="n">flight_path</span><span class="p">)</span>
+            <span class="k">return</span>
+
+    <span class="sd">&quot;&quot;&quot; Processes, stores, and writes metadata files (JSON-LD for public, CSV</span>
+<span class="sd">    for private) for a flight</span>
+
+<span class="sd">       :var dict&lt;str; Object&gt; all_fields: Dictionary containing all information</span>
+<span class="sd">          to be written to metadata files</span>
+<span class="sd">       :var list&lt;str&gt; private_fields: List of fields to be included in the CSV</span>
+<span class="sd">          file</span>
+<span class="sd">       :var list&lt;str&gt; public_fields: List of fields to be included in the JSON</span>
+<span class="sd">          file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Meta.__init__"><a class="viewcode-back" href="../Meta.html#Meta.Meta.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flight_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates new object of type Meta from header file and flight file.</span>
+<span class="sd">        Details about the input files can be found at the bottom of this page.</span>
+
+<span class="sd">        :param str header_path: path to the header file</span>
+<span class="sd">        :param str flight_path: path to the flight file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">private_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;checklist_operator&quot;</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;PIC&quot;</span><span class="p">,</span> <span class="s2">&quot;objective&quot;</span><span class="p">,</span> <span class="s2">&quot;authorization_type&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;platform_id&quot;</span><span class="p">,</span> <span class="s2">&quot;max_planned_alt&quot;</span><span class="p">,</span> <span class="s2">&quot;battery_id&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;scoop_id&quot;</span><span class="p">,</span> <span class="s2">&quot;battery_voltage_initial&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;launch_time_utc&quot;</span><span class="p">,</span> <span class="s2">&quot;max_achieved_alt&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;land_time_utc&quot;</span><span class="p">,</span> <span class="s2">&quot;battery_voltage_final&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;emergency_landing&quot;</span><span class="p">,</span> <span class="s2">&quot;emergency_remarks&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;private_remarks&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">public_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;date_utc&quot;</span><span class="p">,</span> <span class="s2">&quot;region&quot;</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;objective&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;cloud&quot;</span><span class="p">,</span> <span class="s2">&quot;rain&quot;</span><span class="p">,</span> <span class="s2">&quot;wind_from_direction&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;wind_speed&quot;</span><span class="p">,</span> <span class="s2">&quot;wind_speed_of_gust&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;surface_altitude&quot;</span><span class="p">,</span> <span class="s2">&quot;launch_time_utc&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;max_achieved_alt&quot;</span><span class="p">,</span> <span class="s2">&quot;land_time_utc&quot;</span><span class="p">,</span> <span class="s2">&quot;remarks&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;variables&quot;</span><span class="p">,</span> <span class="s2">&quot;platform_id&quot;</span><span class="p">,</span> <span class="s2">&quot;platform_name&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;date_utc&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;checklist_operator&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;PIC&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;objective&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># space-delimited list of wind,</span>
+                           <span class="c1"># thermo, chem, ...</span>
+                           <span class="s2">&quot;authorization_type&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;platform_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># tail number</span>
+                           <span class="s2">&quot;max_planned_alt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;battery_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;scoop_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;battery_voltage_initial&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;launch_time_utc&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;max_achieved_alt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;land_time_utc&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;battery_voltage_final&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;emergency_landing&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Y/N</span>
+                           <span class="s2">&quot;emergency_remarks&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;private_remarks&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;region&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># default is north_america</span>
+                           <span class="s2">&quot;cloud&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># cloud cover in percent</span>
+                           <span class="s2">&quot;rain&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Y or N</span>
+                           <span class="s2">&quot;wind_from_direction&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;wind_speed&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;wind_speed_of_gust&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;surface_altitude&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;launch_time_utc&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;max_achieved_alt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;land_time_utc&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;remarks&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;platform_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># tail number</span>
+                           <span class="s2">&quot;platform_name&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># copter type i.e. TonyShark3</span>
+                           <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">header_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">flight_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Meta.read_file"><a class="viewcode-back" href="../Meta.html#Meta.Meta.read_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Copy data from the CSV file to the all_fields dictionary</span>
+
+<span class="sd">        :param str csv_path: path to the CSV data file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">csv_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">file</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+                        <span class="ow">and</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Replaced &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; with &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="n">field</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">return</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="n">field</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Meta.combine"><a class="viewcode-back" href="../Meta.html#Meta.Meta.combine">[docs]</a>    <span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Merge two Meta objects to create a file that accurately describes</span>
+<span class="sd">        ALL related header and flight files. Only fields that are the same</span>
+<span class="sd">        for both Meta objects are included; all others are set to None.</span>
+
+<span class="sd">        :param Meta other: the Meta object to merge into this one. Only this</span>
+<span class="sd">           object (self) will be altered</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Meta.write_public_meta"><a class="viewcode-back" href="../Meta.html#Meta.Meta.write_public_meta">[docs]</a>    <span class="k">def</span> <span class="nf">write_public_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span> <span class="n">include_private</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Write a human-readable text file containing metadata for the</span>
+<span class="sd">           flight. Unless include_private is set to True, only fields specified</span>
+<span class="sd">           in public_fields will be included in this metadata file.</span>
+
+<span class="sd">        :param str out_path: where to save the file</span>
+<span class="sd">        :param bool include_private: Specify True to include information</span>
+<span class="sd">           intended for internal use only in the new metadata file. Default</span>
+<span class="sd">           False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">public_fields</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+                           <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Meta.get"><a class="viewcode-back" href="../Meta.html#Meta.Meta.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Request the value of a metadata field</span>
+
+<span class="sd">        :param str name: the name of the field</span>
+<span class="sd">        :return: the value of the field, if found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have requested an invalid metadata parameter. &quot;</span>
+                  <span class="s2">&quot;Please try one of the following: &quot;</span> <span class="o">+</span>
+                  <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table of Contents</h3>
+          <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Meta.html">Meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Profile.html">Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Raw_Profile.html">Raw_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Thermo_Profile.html">Thermo_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Wind_Profile.html">Wind_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coefs.html">Sensor calibration</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+            </form>
+          </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="../py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="../genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Jessica Blunt, Tyler Bell, Brian Greene, Gus Azevedo, and Ariel Jacobs.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

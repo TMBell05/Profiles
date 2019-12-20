@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Profile_Set &#8212; Profiles 1.0.1 documentation</title>
+    <title>Profile_Set &#8212; oucass-profiles 1.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -19,7 +19,7 @@
     <div class="header-wrapper" role="banner">
       <div class="header">
         <div class="headertitle"><a
-          href="../index.html">Profiles 1.0.1 documentation</a></div>
+          href="../index.html">oucass-profiles 1.1.0 documentation</a></div>
         <div class="rel" role="navigation" aria-label="related navigation">
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |
@@ -80,7 +80,8 @@
 
 <div class="viewcode-block" id="Profile_Set.__init__"><a class="viewcode-back" href="../Profile_Set.html#Profile_Set.Profile_Set.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">res_units</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">ascent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">dev</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confirm_bounds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">profile_start_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">nc_level</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">):</span>
+                 <span class="n">nc_level</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                 <span class="n">coefs_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">package_path</span><span class="p">,</span> <span class="s2">&quot;coefs&quot;</span><span class="p">)):</span>
         <span class="sd">&quot;&quot;&quot; Creates a Profiles object.</span>
 
 <span class="sd">        :param int resolution: resolution to which data should be</span>
@@ -112,12 +113,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">confirm_bounds</span> <span class="o">=</span> <span class="n">confirm_bounds</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_start_height</span> <span class="o">=</span> <span class="n">profile_start_height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span> <span class="o">=</span> <span class="n">nc_level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_base_start</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_start</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coefs_path</span> <span class="o">=</span> <span class="n">coefs_path</span></div>
 
-<div class="viewcode-block" id="Profile_Set.add_all_profiles"><a class="viewcode-back" href="../Profile_Set.html#Profile_Set.Profile_Set.add_all_profiles">[docs]</a>    <span class="k">def</span> <span class="nf">add_all_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">scoop_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">meta_header_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                         <span class="n">meta_flight_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Profile_Set.add_all_profiles"><a class="viewcode-back" href="../Profile_Set.html#Profile_Set.Profile_Set.add_all_profiles">[docs]</a>    <span class="k">def</span> <span class="nf">add_all_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">scoop_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">meta_flight_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">meta_header_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Reads a file, splits it in to several vertical profiles, and adds</span>
 <span class="sd">        all Profiles to profiles</span>
 
@@ -125,7 +128,7 @@
 <span class="sd">        :param str scoop_id: the identifier of the sensor package used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-        <span class="n">file_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="n">file_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
         <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="ow">is</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="o">=</span> <span class="n">file_dir</span>
         <span class="k">else</span><span class="p">:</span>
@@ -135,19 +138,22 @@
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">file_dir</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                         <span class="n">match_up_to</span> <span class="o">=</span> <span class="n">i</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">file_dir</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                        <span class="c1"># print(self.root_dir[i], file_dir[i])</span>
                         <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">file_dir</span><span class="p">[:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="c1"># print(self.root_dir[:i-1], file_dir[:i-1])</span>
                     <span class="k">break</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[:</span><span class="n">match_up_to</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># print(self.root_dir)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[:</span><span class="n">match_up_to</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+            <span class="c1"># print(self.root_dir)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="o">.</span><span class="n">rindex</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-
+            <span class="c1"># print(self.root_dir)</span>
         <span class="c1"># Process altitude data for profile identification</span>
         <span class="n">raw_profile_set</span> <span class="o">=</span> <span class="n">Raw_Profile</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">,</span> <span class="n">scoop_id</span><span class="p">,</span>
                                       <span class="n">nc_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span><span class="p">,</span>
                                       <span class="n">meta_header_path</span><span class="o">=</span><span class="n">meta_header_path</span><span class="p">,</span>
-                                      <span class="n">meta_flight_path</span><span class="o">=</span><span class="n">meta_flight_path</span><span class="p">)</span>
+                                      <span class="n">meta_flight_path</span><span class="o">=</span><span class="n">meta_flight_path</span><span class="p">,</span>
+                                      <span class="n">coefs_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coefs_path</span><span class="p">)</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">raw_profile_set</span><span class="o">.</span><span class="n">pos_data</span><span class="p">()</span>
 
         <span class="c1"># Identify the start, peak, and end indices of each profile</span>
@@ -159,16 +165,18 @@
 
         <span class="c1"># Create a Profile object for each profile identified</span>
         <span class="k">for</span> <span class="n">profile_num</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">index_list</span><span class="p">)),</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Profile</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">res_units</span><span class="p">,</span> <span class="n">profile_num</span><span class="p">,</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">ascent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">,</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">confirm_bounds</span><span class="p">,</span>
-                                         <span class="n">index_list</span><span class="o">=</span><span class="n">index_list</span><span class="p">,</span>
-                                         <span class="n">raw_profile</span><span class="o">=</span><span class="n">raw_profile_set</span><span class="p">,</span>
-                                         <span class="n">profile_start_height</span><span class="o">=</span><span class="bp">self</span>
-                                         <span class="o">.</span><span class="n">profile_start_height</span><span class="p">,</span>
-                                         <span class="n">nc_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span><span class="p">,</span>
-                                         <span class="n">base_start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_base_start</span><span class="p">))</span>
+            <span class="n">prof</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_units</span><span class="p">,</span>
+                           <span class="n">profile_num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ascent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">confirm_bounds</span><span class="p">,</span> <span class="n">index_list</span><span class="o">=</span><span class="n">index_list</span><span class="p">,</span>
+                           <span class="n">raw_profile</span><span class="o">=</span><span class="n">raw_profile_set</span><span class="p">,</span>
+                           <span class="n">profile_start_height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile_start_height</span><span class="p">,</span>
+                           <span class="n">nc_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span><span class="p">,</span>
+                           <span class="n">base_start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_base_start</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prof</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">meta</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">prof</span><span class="o">.</span><span class="n">meta</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_base_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">_base_start</span>
@@ -183,7 +191,8 @@
                                              <span class="n">profile_start_height</span><span class="o">=</span><span class="bp">self</span>
                                              <span class="o">.</span><span class="n">profile_start_height</span><span class="p">,</span>
                                              <span class="n">nc_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span><span class="p">,</span>
-                                             <span class="n">base_start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_base_start</span><span class="p">))</span>
+                                             <span class="n">base_start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_base_start</span><span class="p">,</span>
+                                             <span class="n">coefs_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coefs_path</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profiles</span><span class="p">),</span> <span class="s2">&quot;profile(s) including those added from file&quot;</span><span class="p">,</span>
@@ -213,10 +222,10 @@
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">file_dir</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                         <span class="n">match_up_to</span> <span class="o">=</span> <span class="n">i</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">file_dir</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                        <span class="c1"># print(self.root_dir[i], file_dir[i])</span>
                         <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">file_dir</span><span class="p">[:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="c1"># print(self.root_dir[:i-1], file_dir[:i-1])</span>
                     <span class="k">break</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">match_up_to</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
 
@@ -224,7 +233,8 @@
         <span class="n">raw_profile</span> <span class="o">=</span> <span class="n">Raw_Profile</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">,</span> <span class="n">scoop_id</span><span class="p">,</span>
                                   <span class="n">nc_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span><span class="p">,</span>
                                   <span class="n">meta_header_path</span><span class="o">=</span><span class="n">meta_header_path</span><span class="p">,</span>
-                                  <span class="n">meta_flight_path</span><span class="o">=</span><span class="n">meta_flight_path</span><span class="p">)</span>
+                                  <span class="n">meta_flight_path</span><span class="o">=</span><span class="n">meta_flight_path</span><span class="p">,</span>
+                                  <span class="n">coefs_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coefs_path</span><span class="p">)</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">raw_profile</span><span class="o">.</span><span class="n">pos_data</span><span class="p">()</span>
 
         <span class="c1"># Identify the start, peak, and end indices of each profile</span>
@@ -241,7 +251,8 @@
                                          <span class="n">raw_profile</span><span class="o">=</span><span class="n">raw_profile</span><span class="p">,</span>
                                          <span class="n">profile_start_height</span><span class="o">=</span><span class="bp">self</span>
                                          <span class="o">.</span><span class="n">profile_start_height</span><span class="p">,</span>
-                                         <span class="n">nc_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span><span class="p">))</span>
+                                         <span class="n">nc_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span><span class="p">,</span>
+                                         <span class="n">coefs_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coefs_path</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">profile_num_guess</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">index_list</span><span class="p">)):</span>
                 <span class="c1"># Check if this profile is the first to start after time</span>
@@ -255,7 +266,8 @@
                                          <span class="n">raw_profile</span><span class="o">=</span><span class="n">raw_profile</span><span class="p">,</span>
                                          <span class="n">profile_start_height</span><span class="o">=</span><span class="bp">self</span>
                                          <span class="o">.</span><span class="n">profile_start_height</span><span class="p">,</span>
-                                         <span class="n">nc_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span><span class="p">))</span>
+                                         <span class="n">nc_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nc_level</span><span class="p">,</span>
+                                         <span class="n">coefs_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coefs_path</span><span class="p">))</span>
 
                 <span class="c1"># No need to add any more profiles from this file</span>
                 <span class="k">break</span>
@@ -414,8 +426,13 @@
 <span class="sd">        :param string file_path: the file name to which attributes should be</span>
 <span class="sd">           saved</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">main_file</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">,</span> <span class="n">file_path</span><span class="p">),</span>
+        <span class="n">main_file</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">,</span>
+                                                 <span class="s2">&quot;processed&quot;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">),</span>
                                     <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;NETCDF4&quot;</span><span class="p">,</span> <span class="n">mmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">write_public_meta</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">,</span><span class="s2">&quot;processed&quot;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+                <span class="o">+</span> <span class="s2">&quot;_meta.txt&quot;</span><span class="p">)</span>
         <span class="n">main_file</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">)</span>
         <span class="n">main_file</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
         <span class="n">main_file</span><span class="o">.</span><span class="n">res_units</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_units</span>
@@ -552,6 +569,18 @@
                 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
+
+        <span class="c1">#</span>
+        <span class="c1"># META</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># print(&quot;\n\n&quot; + str(self.meta.public_fields) + &quot;\n\n&quot;)</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">public_fields</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># print(key)</span>
+                    <span class="n">main_file</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                    <span class="n">main_file</span><span class="o">.</span><span class="n">renameAttribute</span><span class="p">(</span><span class="s2">&quot;key&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
         <span class="n">main_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Profile_Set.__str__"><a class="viewcode-back" href="../Profile_Set.html#Profile_Set.Profile_Set.__str__">[docs]</a>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -571,13 +600,16 @@
           <h3>Table of Contents</h3>
           <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../Meta.html">Meta</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Profile.html">Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Raw_Profile.html">Raw_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Thermo_Profile.html">Thermo_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Wind_Profile.html">Wind_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plotting.html">plotting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coefs.html">Sensor calibration</a></li>
 </ul>
 
           <div role="search">

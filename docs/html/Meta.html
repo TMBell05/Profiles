@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Meta &#8212; oucass-profiles 1.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Profile" href="Profile.html" />
+    <link rel="prev" title="Profiles: powered by CASS" href="index.html" /> 
+  </head><body>
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="index.html">oucass-profiles 1.1.0 documentation</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="index.html" title="Profiles: powered by CASS"
+             accesskey="P">previous</a> |
+          <a href="Profile.html" title="Profile"
+             accesskey="N">next</a> |
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Meta">
+<span id="meta"></span><h1>Meta<a class="headerlink" href="#module-Meta" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Meta.Meta">
+<em class="property">class </em><code class="sig-prename descclassname">Meta.</code><code class="sig-name descname">Meta</code><span class="sig-paren">(</span><em class="sig-param">header_path=None</em>, <em class="sig-param">flight_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Meta.html#Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Meta.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes, stores, and writes metadata files (JSON-LD for public, CSV for private) for a flight</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dict&lt;str</strong> – Object&gt; all_fields: Dictionary containing all information to be written to metadata files</p></li>
+<li><p><strong>private_fields</strong> (<em>list&lt;str&gt;</em>) – List of fields to be included in the CSV file</p></li>
+<li><p><strong>public_fields</strong> (<em>list&lt;str&gt;</em>) – List of fields to be included in the JSON file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="Meta.Meta.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">header_path=None</em>, <em class="sig-param">flight_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Meta.html#Meta.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Meta.Meta.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates new object of type Meta from header file and flight file.
+Details about the input files can be found at the bottom of this page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header_path</strong> (<em>str</em>) – path to the header file</p></li>
+<li><p><strong>flight_path</strong> (<em>str</em>) – path to the flight file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Meta.Meta.combine">
+<code class="sig-name descname">combine</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Meta.html#Meta.combine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Meta.Meta.combine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge two Meta objects to create a file that accurately describes
+ALL related header and flight files. Only fields that are the same
+for both Meta objects are included; all others are set to None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#Meta.Meta" title="Meta.Meta"><em>Meta</em></a>) – the Meta object to merge into this one. Only this
+object (self) will be altered</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Meta.Meta.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Meta.html#Meta.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Meta.Meta.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request the value of a metadata field</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – the name of the field</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the value of the field, if found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Meta.Meta.read_file">
+<code class="sig-name descname">read_file</code><span class="sig-paren">(</span><em class="sig-param">csv_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Meta.html#Meta.read_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Meta.Meta.read_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy data from the CSV file to the all_fields dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>csv_path</strong> (<em>str</em>) – path to the CSV data file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Meta.Meta.write_public_meta">
+<code class="sig-name descname">write_public_meta</code><span class="sig-paren">(</span><em class="sig-param">out_path</em>, <em class="sig-param">include_private=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Meta.html#Meta.write_public_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Meta.Meta.write_public_meta" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Write a human-readable text file containing metadata for the</dt><dd><p>flight. Unless include_private is set to True, only fields specified
+in public_fields will be included in this metadata file.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>out_path</strong> (<em>str</em>) – where to save the file</p></li>
+<li><p><strong>include_private</strong> (<em>bool</em>) – Specify True to include information
+intended for internal use only in the new metadata file. Default
+False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table of Contents</h3>
+          <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Profile.html">Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Profile_Set.html">Profile_Set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Raw_Profile.html">Raw_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Profile_Set.html">Profile_Set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Thermo_Profile.html">Thermo_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Wind_Profile.html">Wind_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coefs.html">Sensor calibration</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+            </form>
+          </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="index.html" title="Profiles: powered by CASS"
+              >previous</a> |
+            <a href="Profile.html" title="Profile"
+              >next</a> |
+            <a href="py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+              <br/>
+              <a href="_sources/Meta.rst.txt"
+                rel="nofollow">Show Source</a>
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Jessica Blunt, Tyler Bell, Brian Greene, Gus Azevedo, and Ariel Jacobs.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

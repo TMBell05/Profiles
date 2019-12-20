@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: oucass-profiles
+Version: 1.1.0
+Summary: Tools to process atmospheric data collected by UAS along either vertical or horizontal lines
+Home-page: https://github.com/oucass/Profiles
+Author: Jessica Blunt, Tyler Bell, Brian Greene, Gus Azevedo, Ariel Jacobs
+Author-email: cass@ou.edu
+License: UNKNOWN
+Description: # Profiles
+        
+        See https://oucass.github.io/Profiles for documentation.
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown

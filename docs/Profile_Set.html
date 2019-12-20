@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Profile_Set &#8212; Profiles 1.0.1 documentation</title>
+    <title>Profile_Set &#8212; oucass-profiles 1.1.0 documentation</title>
     <link rel="stylesheet" href="_static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -21,7 +21,7 @@
     <div class="header-wrapper" role="banner">
       <div class="header">
         <div class="headertitle"><a
-          href="index.html">Profiles 1.0.1 documentation</a></div>
+          href="index.html">oucass-profiles 1.1.0 documentation</a></div>
         <div class="rel" role="navigation" aria-label="related navigation">
           <a href="Profile.html" title="Profile"
              accesskey="P">previous</a> |
@@ -52,7 +52,7 @@
 <p>Component of Profiles v1.0.0</p>
 <dl class="class">
 <dt id="Profile_Set.Profile_Set">
-<em class="property">class </em><code class="sig-prename descclassname">Profile_Set.</code><code class="sig-name descname">Profile_Set</code><span class="sig-paren">(</span><em class="sig-param">resolution=10</em>, <em class="sig-param">res_units='m'</em>, <em class="sig-param">ascent=True</em>, <em class="sig-param">dev=False</em>, <em class="sig-param">confirm_bounds=True</em>, <em class="sig-param">profile_start_height=None</em>, <em class="sig-param">nc_level='none'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Profile_Set.html#Profile_Set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Profile_Set.Profile_Set" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">Profile_Set.</code><code class="sig-name descname">Profile_Set</code><span class="sig-paren">(</span><em class="sig-param">resolution=10</em>, <em class="sig-param">res_units='m'</em>, <em class="sig-param">ascent=True</em>, <em class="sig-param">dev=False</em>, <em class="sig-param">confirm_bounds=True</em>, <em class="sig-param">profile_start_height=None</em>, <em class="sig-param">nc_level='none'</em>, <em class="sig-param">coefs_path='/home/jessica/GitHub/Profiles/profiles/coefs'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Profile_Set.html#Profile_Set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Profile_Set.Profile_Set" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class manages data (in the form of Profile objects) from one or
 many flights.</p>
 <dl class="field-list simple">
@@ -71,7 +71,7 @@ many flights.</p>
 </dl>
 <dl class="method">
 <dt id="Profile_Set.Profile_Set.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">resolution=10</em>, <em class="sig-param">res_units='m'</em>, <em class="sig-param">ascent=True</em>, <em class="sig-param">dev=False</em>, <em class="sig-param">confirm_bounds=True</em>, <em class="sig-param">profile_start_height=None</em>, <em class="sig-param">nc_level='none'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Profile_Set.html#Profile_Set.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Profile_Set.Profile_Set.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">resolution=10</em>, <em class="sig-param">res_units='m'</em>, <em class="sig-param">ascent=True</em>, <em class="sig-param">dev=False</em>, <em class="sig-param">confirm_bounds=True</em>, <em class="sig-param">profile_start_height=None</em>, <em class="sig-param">nc_level='none'</em>, <em class="sig-param">coefs_path='/home/jessica/GitHub/Profiles/profiles/coefs'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Profile_Set.html#Profile_Set.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Profile_Set.Profile_Set.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Profiles object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -97,7 +97,7 @@ calculated in units of altitude or pressure</p></li>
 
 <dl class="method">
 <dt id="Profile_Set.Profile_Set.add_all_profiles">
-<code class="sig-name descname">add_all_profiles</code><span class="sig-paren">(</span><em class="sig-param">file_path</em>, <em class="sig-param">scoop_id=None</em>, <em class="sig-param">meta_header_path=None</em>, <em class="sig-param">meta_flight_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Profile_Set.html#Profile_Set.add_all_profiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Profile_Set.Profile_Set.add_all_profiles" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_all_profiles</code><span class="sig-paren">(</span><em class="sig-param">file_path</em>, <em class="sig-param">scoop_id=None</em>, <em class="sig-param">meta_flight_path=None</em>, <em class="sig-param">meta_header_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Profile_Set.html#Profile_Set.add_all_profiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Profile_Set.Profile_Set.add_all_profiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads a file, splits it in to several vertical profiles, and adds
 all Profiles to profiles</p>
 <dl class="field-list simple">
@@ -176,13 +176,16 @@ saved</p>
           <h3>Table of Contents</h3>
           <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Meta.html">Meta</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Profile.html">Profile</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Raw_Profile.html">Raw_Profile</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Thermo_Profile.html">Thermo_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Wind_Profile.html">Wind_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plotting.html">plotting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coefs.html">Sensor calibration</a></li>
 </ul>
 
           <div role="search">

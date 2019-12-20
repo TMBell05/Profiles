@@ -11,9 +11,10 @@ import json
 import netCDF4
 import numpy as np
 from datetime import datetime as dt
-from metpy.units import units
+from metpy.units import units  # this is a pint UnitRegistry
 import profiles.mavlogdump_Profiles as mavlogdump_Profiles
 from profiles import utils
+from profiles.Meta import Meta
 import pandas as pd
 import os
 
@@ -37,9 +38,12 @@ class Raw_Profile():
     :var dict serial_numbers: Contains serial number or 0 for each sensor
     """
 
-    def __init__(self, file_path, dev=False, scoop_id=None, nc_level='low'):
-        """ Creates a Raw_Profile object and reads in data in the appropiate
-        format.
+    def __init__(self, file_path, dev=False, scoop_id=None, nc_level='low',
+                 meta_flight_path=None, meta_header_path=None,
+                 coefs_path=os.path.join(utils.package_path, "coefs")):
+        """ Creates a Raw_Profile object and reads in data in the appropriate
+        format. *If meta_path_flight or meta_path_header includes scoop_id,
+        the scoop_id constructor parameter will be overwritten*
 
         :param string file_path: file name
         :param bool dev: True if the flight was developmental, false otherwise
@@ -52,6 +56,9 @@ class Raw_Profile():
            'none'.
         """
 
+        self.meta = None
+        if meta_header_path is not None or meta_flight_path is not None:
+            self.meta = Meta(meta_header_path, meta_flight_path)
         self.temp = None
         self.rh = None
         self.pos = None
@@ -60,6 +67,7 @@ class Raw_Profile():
         self.dev = dev
         self.baro = "BARO"
         self.serial_numbers_from_JSON = None
+        self.coefs_path = coefs_path
         if "json" in file_path or "JSON" in file_path:
             if os.path.basename(file_path)[:-5] + ".nc" in \
                os.listdir(os.path.dirname(file_path)):
@@ -73,12 +81,25 @@ class Raw_Profile():
                                                       file_name=file_path)
             self._read_JSON(file_path, nc_level=nc_level)
 
+        # Incorporate metadata
+        self.meta = None
+        if meta_flight_path is not None or meta_header_path is not None:
+            self.meta = Meta(meta_header_path, meta_flight_path)
+            id = self.meta.get("scoop_id")
+            if id is not None:
+                scoop_id = id
+
         # Populate serial_numbers
         self.serial_numbers = {}
 
+        if self.meta is not None:
+            scoop_id = self.meta.get("scoop_id")
+
         if scoop_id is not None:
             try:
-                coefs = pd.read_csv(utils.package_path + "/coefs/scoop" + str(scoop_id) + ".csv")
+                coefs = pd.read_csv(os.path.join(coefs_path,
+                                                 "scoop" + str(scoop_id)
+                                                 + ".csv"))
                 coefs.validFrom = [dt.strptime(date_string, "%Y-%m-%d")
                                    for date_string in coefs.validFrom]
                 day_flight = self.temp[-1][0]
@@ -273,8 +294,8 @@ class Raw_Profile():
 
             # TODO test if wind coef is read correctly
             if elem["meta"]["type"] == "PARM" and "SYSID_THISMAV" in elem["data"]["Name"]:
-                file = np.transpose(np.genfromtxt(os.path.join(utils.package_path,
-                                                               'coefs/copterID.csv'), delimiter=','))
+                file = np.transpose(np.genfromtxt(os.path.join(self.coefs_path,
+                                                               'copterID.csv'), delimiter=','))
                 del file
 
             if elem["meta"]["type"] == "PARM" and "USER_SENSORS" in elem["data"]["Name"]:

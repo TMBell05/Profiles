@@ -24,10 +24,8 @@ different profile start height.
 # Example using Profile_Set
 a = Profile_Set(resolution=1, res_units='m', ascent=True, dev=True)
 a.add_all_profiles("/home/jessica/GitHub/data_templates/20191014/20191014_2029.json",
-                   meta_flight_path="/home/jessica/GitHub/Utilities/Logs/"
-                                    "20191113_1232N944UA (CS 2.1 - TONYSHARK)_flight_log.csv",
-                   meta_header_path="/home/jessica/GitHub/Utilities/Logs/"
-                                    "20191113N944UA (CS 2.1 - TONYSHARK)_log_header.csv")
+                   meta_flight_path="/home/jessica/GitHub/Utilities/Logs/20191115_2321N963UA (CS3D)_flight_log.csv",
+                   meta_header_path="/home/jessica/GitHub/Utilities/Logs/20191115N963UA (CS3D)_log_header.csv")
 
 
 

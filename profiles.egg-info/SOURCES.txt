@@ -1,5 +1,6 @@
 README.md
 setup.py
+profiles/Meta.py
 profiles/Profile.py
 profiles/Profile_Set.py
 profiles/Raw_Profile.py
@@ -9,7 +10,6 @@ profiles/Wind_Profile.py
 profiles/__init__.py
 profiles/mavlogdump_Profiles.py
 profiles/plotting.py
-profiles/process_checklist.py
 profiles/utils.py
 profiles.egg-info/MANIFEST.in
 profiles.egg-info/PKG-INFO

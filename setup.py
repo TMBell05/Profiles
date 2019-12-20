@@ -7,7 +7,7 @@ setuptools.setup(
     name="profilesBackwards",
     version="1.0.1",
     author="Jessica Blunt, Tyler Bell, Brian Greene, Gus Azevedo, Ariel Jacobs",
-    author_email="jessica.m.blunt-1@ou.edu",
+    author_email="cass@ou.edu",
     description="Tools to process atmospheric data collected by UAS along either vertical or horizontal lines",
     long_description=long_description,
     long_description_content_type="text/markdown",

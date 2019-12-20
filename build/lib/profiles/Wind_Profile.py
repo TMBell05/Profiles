@@ -38,7 +38,8 @@ class Wind_Profile():
 
     def _init2(self, wind_dict, resolution, file_path=None,
                gridded_times=None, gridded_base=None, indices=(None, None),
-               ascent=True, units=None, nc_level='low'):
+               ascent=True, units=None, nc_level='low',
+               coefs_path=os.path.join(utils.package_path, "coefs")):
         """ Creates Wind_Profile object based on rotation data at the specified
         resolution
 
@@ -62,7 +63,7 @@ class Wind_Profile():
         """
 
 
-
+        self.coefs_path = coefs_path
         try:
             self._read_netCDF(file_path + "wind_" +
                               str(resolution.magnitude) +
@@ -213,7 +214,7 @@ class Wind_Profile():
             psi[i] = np.arccos(R[2, 2])
             az[i] = np.arctan2(R[1, 2], R[0, 2])
 
-        coefs = pd.read_csv(os.path.join(utils.package_path, 'coefs/MasterCoefList.csv'))
+        coefs = pd.read_csv(os.path.join(self.coefs_path, 'MasterCoefList.csv'))
         a_spd = float(coefs.A[coefs.SerialNumber == tail_num]
                       [coefs.SensorType == "Wind"])
         b_spd = float(coefs.B[coefs.SerialNumber == tail_num]
