@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Raw_Profile &#8212; Profiles 1.0.1 documentation</title>
+    <title>Raw_Profile &#8212; oucass-profiles 1.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -19,7 +19,7 @@
     <div class="header-wrapper" role="banner">
       <div class="header">
         <div class="headertitle"><a
-          href="../index.html">Profiles 1.0.1 documentation</a></div>
+          href="../index.html">oucass-profiles 1.1.0 documentation</a></div>
         <div class="rel" role="navigation" aria-label="related navigation">
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |
@@ -54,9 +54,9 @@
 <span class="kn">from</span> <span class="nn">metpy.units</span> <span class="k">import</span> <span class="n">units</span>  <span class="c1"># this is a pint UnitRegistry</span>
 <span class="kn">import</span> <span class="nn">profiles.mavlogdump_Profiles</span> <span class="k">as</span> <span class="nn">mavlogdump_Profiles</span>
 <span class="kn">from</span> <span class="nn">profiles</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">profiles.Meta</span> <span class="k">import</span> <span class="n">Meta</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">profiles.process_checklist</span> <span class="k">import</span> <span class="n">Meta</span>
 
 <span class="n">units</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;percent = 0.01*count = %&#39;</span><span class="p">)</span>
 <span class="n">units</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;gPerKg = 0.001*count = g/Kg&#39;</span><span class="p">)</span>
@@ -79,9 +79,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scoop_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nc_level</span><span class="o">=</span><span class="s1">&#39;low&#39;</span><span class="p">,</span>
-                 <span class="n">meta_header_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">meta_flight_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Creates a Raw_Profile object and reads in data in the appropiate</span>
-<span class="sd">        format.</span>
+                 <span class="n">meta_flight_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">meta_header_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">coefs_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">package_path</span><span class="p">,</span> <span class="s2">&quot;coefs&quot;</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a Raw_Profile object and reads in data in the appropriate</span>
+<span class="sd">        format. *If meta_path_flight or meta_path_header includes scoop_id,</span>
+<span class="sd">        the scoop_id constructor parameter will be overwritten*</span>
 
 <span class="sd">        :param string file_path: file name</span>
 <span class="sd">        :param bool dev: True if the flight was developmental, false otherwise</span>
@@ -105,6 +107,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="n">dev</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">baro</span> <span class="o">=</span> <span class="s2">&quot;BARO&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serial_numbers_from_JSON</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coefs_path</span> <span class="o">=</span> <span class="n">coefs_path</span>
         <span class="k">if</span> <span class="s2">&quot;json&quot;</span> <span class="ow">in</span> <span class="n">file_path</span> <span class="ow">or</span> <span class="s2">&quot;JSON&quot;</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_path</span><span class="p">)[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.nc&quot;</span> <span class="ow">in</span> \
                <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">)):</span>
@@ -118,6 +121,14 @@
                                                       <span class="n">file_name</span><span class="o">=</span><span class="n">file_path</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read_JSON</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">nc_level</span><span class="o">=</span><span class="n">nc_level</span><span class="p">)</span>
 
+        <span class="c1"># Incorporate metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">meta_flight_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">meta_header_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="n">Meta</span><span class="p">(</span><span class="n">meta_header_path</span><span class="p">,</span> <span class="n">meta_flight_path</span><span class="p">)</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scoop_id&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">scoop_id</span> <span class="o">=</span> <span class="nb">id</span>
+
         <span class="c1"># Populate serial_numbers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serial_numbers</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -126,7 +137,9 @@
 
         <span class="k">if</span> <span class="n">scoop_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">coefs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">package_path</span> <span class="o">+</span> <span class="s2">&quot;/coefs/scoop&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scoop_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
+                <span class="n">coefs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">coefs_path</span><span class="p">,</span>
+                                                 <span class="s2">&quot;scoop&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scoop_id</span><span class="p">)</span>
+                                                 <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">))</span>
                 <span class="n">coefs</span><span class="o">.</span><span class="n">validFrom</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_string</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
                                    <span class="k">for</span> <span class="n">date_string</span> <span class="ow">in</span> <span class="n">coefs</span><span class="o">.</span><span class="n">validFrom</span><span class="p">]</span>
                 <span class="n">day_flight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
@@ -321,8 +334,8 @@
 
             <span class="c1"># TODO test if wind coef is read correctly</span>
             <span class="k">if</span> <span class="n">elem</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PARM&quot;</span> <span class="ow">and</span> <span class="s2">&quot;SYSID_THISMAV&quot;</span> <span class="ow">in</span> <span class="n">elem</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;Name&quot;</span><span class="p">]:</span>
-                <span class="n">file</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">package_path</span><span class="p">,</span>
-                                                               <span class="s1">&#39;coefs/copterID.csv&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coefs_path</span><span class="p">,</span>
+                                                               <span class="s1">&#39;copterID.csv&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
                 <span class="k">del</span> <span class="n">file</span>
 
             <span class="k">if</span> <span class="n">elem</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PARM&quot;</span> <span class="ow">and</span> <span class="s2">&quot;USER_SENSORS&quot;</span> <span class="ow">in</span> <span class="n">elem</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;Name&quot;</span><span class="p">]:</span>
@@ -917,13 +930,16 @@
           <h3>Table of Contents</h3>
           <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../Meta.html">Meta</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Profile.html">Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Raw_Profile.html">Raw_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Thermo_Profile.html">Thermo_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Wind_Profile.html">Wind_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plotting.html">plotting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coefs.html">Sensor calibration</a></li>
 </ul>
 
           <div role="search">

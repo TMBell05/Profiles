@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>utils &#8212; Profiles 1.0.1 documentation</title>
+    <title>utils &#8212; oucass-profiles 1.1.0 documentation</title>
     <link rel="stylesheet" href="_static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -15,15 +15,18 @@
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using your own Sensor Coefficients" href="coefs.html" />
     <link rel="prev" title="plotting" href="plotting.html" /> 
   </head><body>
     <div class="header-wrapper" role="banner">
       <div class="header">
         <div class="headertitle"><a
-          href="index.html">Profiles 1.0.1 documentation</a></div>
+          href="index.html">oucass-profiles 1.1.0 documentation</a></div>
         <div class="rel" role="navigation" aria-label="related navigation">
           <a href="plotting.html" title="plotting"
              accesskey="P">previous</a> |
+          <a href="coefs.html" title="Using your own Sensor Coefficients"
+             accesskey="N">next</a> |
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |
           <a href="genindex.html" title="General Index"
@@ -182,7 +185,7 @@ sensor flagged for response time, and 4 in the position of each flagged as empty
 
 <dl class="function">
 <dt>
-<code class="sig-prename descclassname">utils.</code><code class="sig-name descname">temp_calib</code><span class="sig-paren">(</span><em class="sig-param">resistance</em>, <em class="sig-param">sn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#temp_calib"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">utils.</code><code class="sig-name descname">temp_calib</code><span class="sig-paren">(</span><em class="sig-param">resistance</em>, <em class="sig-param">sn</em>, <em class="sig-param">coefs_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#temp_calib"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Converts resistance to temperature using the coefficients for the        sensor specified OR generalized coefficients if the serial number (sn)       is not recognized.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -211,13 +214,16 @@ sensor flagged for response time, and 4 in the position of each flagged as empty
           <h3>Table of Contents</h3>
           <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Meta.html">Meta</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Profile.html">Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Raw_Profile.html">Raw_Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Profile_Set.html">Profile_Set</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Thermo_Profile.html">Thermo_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Wind_Profile.html">Wind_Profile</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plotting.html">plotting</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coefs.html">Sensor calibration</a></li>
 </ul>
 
           <div role="search">
@@ -238,6 +244,8 @@ sensor flagged for response time, and 4 in the position of each flagged as empty
           <div role="navigation" aria-label="related navigaton">
             <a href="plotting.html" title="plotting"
               >previous</a> |
+            <a href="coefs.html" title="Using your own Sensor Coefficients"
+              >next</a> |
             <a href="py-modindex.html" title="Python Module Index"
               >modules</a> |
             <a href="genindex.html" title="General Index"

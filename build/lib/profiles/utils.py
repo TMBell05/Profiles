@@ -147,7 +147,7 @@ def regrid_data(data=None, data_times=None, gridded_times=None, units=None):
     return (gridded_data)
 
 
-def temp_calib(resistance, sn):
+def temp_calib(resistance, sn, coefs_path):
     """ Converts resistance to temperature using the coefficients for the \
        sensor specified OR generalized coefficients if the serial number (sn)\
        is not recognized.
@@ -159,8 +159,7 @@ def temp_calib(resistance, sn):
     :return: list of temperatures in K
     """
 
-    coefs = pd.read_csv(os.path.join(package_path, 'coefs/MasterCoefList.csv'))
-    a = coefs.A[coefs.SerialNumber == sn][coefs.SensorType == "Imet"]
+    coefs = pd.read_csv(os.path.join(coefs_path, 'MasterCoefList.csv'))
     a = float(coefs.A[coefs.SerialNumber == sn][coefs.SensorType == "Imet"])
     b = float(coefs.B[coefs.SerialNumber == sn][coefs.SensorType == "Imet"])
     c = float(coefs.C[coefs.SerialNumber == sn][coefs.SensorType == "Imet"])

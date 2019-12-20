@@ -40,7 +40,8 @@ class Profile_Set():
 
     def __init__(self, resolution=10, res_units='m', ascent=True,
                  dev=False, confirm_bounds=True, profile_start_height=None,
-                 nc_level='none'):
+                 nc_level='none',
+                 coefs_path=os.path.join(utils.package_path, "coefs")):
         """ Creates a Profiles object.
 
         :param int resolution: resolution to which data should be
@@ -72,12 +73,14 @@ class Profile_Set():
         self.confirm_bounds = confirm_bounds
         self.profiles = []
         self.profile_start_height = profile_start_height
+        self.meta = None
         self._nc_level = nc_level
         self.root_dir = ""
         self._base_start = None
+        self.coefs_path = coefs_path
 
-    def add_all_profiles(self, file_path, scoop_id=None, meta_header_path=None,
-                         meta_flight_path=None):
+    def add_all_profiles(self, file_path, scoop_id=None,
+                         meta_flight_path=None, meta_header_path=None):
         """ Reads a file, splits it in to several vertical profiles, and adds
         all Profiles to profiles
 
@@ -85,7 +88,7 @@ class Profile_Set():
         :param str scoop_id: the identifier of the sensor package used
         """
         file_path = os.path.abspath(file_path)
-        file_dir = os.path.dirname(file_path)
+        file_dir = os.path.dirname(file_path) + "/"
         if(self.root_dir is ""):
             self.root_dir = file_dir
         else:
@@ -95,19 +98,22 @@ class Profile_Set():
                     if self.root_dir[i] == file_dir[i]:
                         match_up_to = i
                     else:
-                        print(self.root_dir[i], file_dir[i])
+                        # print(self.root_dir[i], file_dir[i])
                         break
                 else:
-                    print(self.root_dir[:i-1], file_dir[:i-1])
+                    # print(self.root_dir[:i-1], file_dir[:i-1])
                     break
-            self.root_dir = self.root_dir[:match_up_to+1]
+            # print(self.root_dir)
+            self.root_dir = self.root_dir[:match_up_to+2]
+            # print(self.root_dir)
             self.root_dir = self.root_dir[:self.root_dir.rindex("/")+1]
-
+            # print(self.root_dir)
         # Process altitude data for profile identification
         raw_profile_set = Raw_Profile(file_path, self.dev, scoop_id,
                                       nc_level=self._nc_level,
                                       meta_header_path=meta_header_path,
-                                      meta_flight_path=meta_flight_path)
+                                      meta_flight_path=meta_flight_path,
+                                      coefs_path=self.coefs_path)
         pos = raw_profile_set.pos_data()
 
         # Identify the start, peak, and end indices of each profile
@@ -119,16 +125,18 @@ class Profile_Set():
 
         # Create a Profile object for each profile identified
         for profile_num in np.add(range(len(index_list)), 1):
-            self.profiles.append(Profile(file_path, self.resolution,
-                                         self.res_units, profile_num,
-                                         self.ascent, self.dev,
-                                         self.confirm_bounds,
-                                         index_list=index_list,
-                                         raw_profile=raw_profile_set,
-                                         profile_start_height=self
-                                         .profile_start_height,
-                                         nc_level=self._nc_level,
-                                         base_start=self._base_start))
+            prof = Profile(file_path, self.resolution, self.res_units,
+                           profile_num, self.ascent, self.dev,
+                           self.confirm_bounds, index_list=index_list,
+                           raw_profile=raw_profile_set,
+                           profile_start_height=self.profile_start_height,
+                           nc_level=self._nc_level,
+                           base_start=self._base_start)
+            self.profiles.append(prof)
+            if self.meta is None:
+                self.meta = prof.meta
+            else:
+                self.meta.combine(prof.meta)
 
             if self._base_start is None:
                 self._base_start = self.profiles[-1]._base_start
@@ -143,7 +151,8 @@ class Profile_Set():
                                              profile_start_height=self
                                              .profile_start_height,
                                              nc_level=self._nc_level,
-                                             base_start=self._base_start))
+                                             base_start=self._base_start,
+                                             coefs_path=self.coefs_path))
 
         self.profiles.sort()
         print(len(self.profiles), "profile(s) including those added from file",
@@ -173,10 +182,10 @@ class Profile_Set():
                     if self.root_dir[i] == file_dir[i]:
                         match_up_to = i
                     else:
-                        print(self.root_dir[i], file_dir[i])
+                        # print(self.root_dir[i], file_dir[i])
                         break
                 else:
-                    print(self.root_dir[:i-1], file_dir[:i-1])
+                    # print(self.root_dir[:i-1], file_dir[:i-1])
                     break
             self.root_dir = os.path.dirname(self.root_dir[0:match_up_to+1])
 
@@ -184,7 +193,8 @@ class Profile_Set():
         raw_profile = Raw_Profile(file_path, self.dev, scoop_id,
                                   nc_level=self._nc_level,
                                   meta_header_path=meta_header_path,
-                                  meta_flight_path=meta_flight_path)
+                                  meta_flight_path=meta_flight_path,
+                                  coefs_path=self.coefs_path)
         pos = raw_profile.pos_data()
 
         # Identify the start, peak, and end indices of each profile
@@ -201,7 +211,8 @@ class Profile_Set():
                                          raw_profile=raw_profile,
                                          profile_start_height=self
                                          .profile_start_height,
-                                         nc_level=self._nc_level))
+                                         nc_level=self._nc_level,
+                                         coefs_path=self.coefs_path))
         else:
             for profile_num_guess in range(len(index_list)):
                 # Check if this profile is the first to start after time
@@ -215,7 +226,8 @@ class Profile_Set():
                                          raw_profile=raw_profile,
                                          profile_start_height=self
                                          .profile_start_height,
-                                         nc_level=self._nc_level))
+                                         nc_level=self._nc_level,
+                                         coefs_path=self.coefs_path))
 
                 # No need to add any more profiles from this file
                 break
@@ -374,8 +386,13 @@ class Profile_Set():
         :param string file_path: the file name to which attributes should be
            saved
         """
-        main_file = netCDF4.Dataset(os.path.join(self.root_dir, file_path),
+        main_file = netCDF4.Dataset(os.path.join(self.root_dir,
+                                                 "processed", file_path),
                                     "w", format="NETCDF4", mmap=False)
+        if self.meta is not None:
+            self.meta.write_public_meta(
+                os.path.join(self.root_dir,"processed", file_path)[:-3]
+                + "_meta.txt")
         main_file.dev = str(self.dev)
         main_file.resolution = self.resolution
         main_file.res_units = self.res_units
@@ -511,6 +528,18 @@ class Profile_Set():
                     alt_var.units = str(wind.alt.units)
                 except Exception:
                     print("")
+
+
+        #
+        # META
+        #
+        if self.meta is not None:
+            # print("\n\n" + str(self.meta.public_fields) + "\n\n")
+            for key in np.unique(self.meta.public_fields):
+                if self.meta.get(key) is not None:
+                    # print(key)
+                    main_file.key = self.meta.get(key)
+                    main_file.renameAttribute("key", key)
 
         main_file.close()
 

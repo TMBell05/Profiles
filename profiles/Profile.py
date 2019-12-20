@@ -10,6 +10,7 @@ Component of Profiles v1.0.0
 
 import profiles.utils as utils
 import sys
+import os
 from profiles.Raw_Profile import Raw_Profile
 from profiles.Thermo_Profile import Thermo_Profile
 from profiles.Wind_Profile import Wind_Profile
@@ -44,7 +45,8 @@ class Profile():
                ascent=True, dev=False, confirm_bounds=True,
                index_list=None, scoop_id=None, raw_profile=None,
                profile_start_height=None, nc_level='low', base_start=None,
-               meta_flight_path=None, meta_header_path=None):
+               meta_flight_path=None, meta_header_path=None,
+               coefs_path=os.path.join(utils.package_path, "coefs")):
         """ Creates a Profile object.
 
         :param string file_path: data file
@@ -76,17 +78,20 @@ class Profile():
            'none'.
         """
 
+        self.coefs_path = coefs_path
         if raw_profile is not None:
             self._raw_profile = raw_profile
         else:
             self._raw_profile = Raw_Profile(file_path, dev, scoop_id,
                                             nc_level=nc_level,
                                             meta_header_path=meta_header_path,
-                                            meta_flight_path=meta_flight_path)
+                                            meta_flight_path=meta_flight_path,
+                                            coefs_path=coefs_path)
         self._units = self._raw_profile.get_units()
         self._pos = self._raw_profile.pos_data()
         self._pres = (self._raw_profile.pres[0], self._raw_profile.pres[-1])
         self._nc_level = nc_level
+        self.meta = self._raw_profile.meta
 
         try:
             if index_list is None:
@@ -184,7 +189,8 @@ class Profile():
                              gridded_base=self.gridded_base,
                              indices=self.indices, ascent=self.ascent,
                              units=self._units, file_path=self.file_path,
-                             nc_level=self._nc_level)
+                             nc_level=self._nc_level,
+                             coefs_path=self.coefs_path)
             if len(self._wind_profile.gridded_times) > len(self.gridded_times):
                 new_len = len(self.gridded_times)
                 self._wind_profile.trucate_to(new_len)
@@ -213,7 +219,8 @@ class Profile():
                                gridded_base=self.gridded_base,
                                indices=self.indices, ascent=self.ascent,
                                units=self._units, file_path=self.file_path,
-                               nc_level=self._nc_level)
+                               nc_level=self._nc_level,
+                               coefs_path=self.coefs_path)
             if len(self._thermo_profile.gridded_times) > \
                     len(self.gridded_times):
                 new_len = len(self.gridded_times)
